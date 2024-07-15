@@ -1,0 +1,81 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-sm-12 mt-5 text-center">
+      <button pButton pRipple (click)="toggleForm()" *ngIf="!showForm">
+        Want to Add product info !!!
+      </button>
+    </div>
+  </div>
+  <div class="row" *ngIf="showForm">
+    <div class="col-sm-12 mb-4">
+      <h1 style="color: rgb(109, 2, 91);">Please add product information</h1>
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-group col-sm-4 mb-3">
+          <label class="form-label" for="productName">Product Name</label>
+          <input type="text" class="form-control" id="productName" formControlName="name">
+          <small *ngIf="!productForm.get('name').valid && productForm.get('name').touched"
+            class="form-text text-danger">* Product name is required</small>
+        </div>
+        <div class="form-group col-sm-4 mb-3">
+          <label class="form-label" for="productprice">Price</label>
+          <input type="text" class="form-control" id="productprice" formControlName="price">
+          <small *ngIf="!productForm.get('price').valid && productForm.get('price').touched"
+            class="form-text text-danger">* price is required</small>
+        </div>
+        <div class="form-group col-sm-4 mb-3">
+          <label class="form-label" for="productcategory">Category</label>
+          <input type="text" class="form-control" id="productcategory" formControlName="category">
+          <small *ngIf="!productForm.get('category').valid && productForm.get('category').touched"
+            class="form-text text-danger">* category is required</small>
+        </div>
+        <button pButton pRipple class="p-button-success me-1"
+          [ngClass]="isEdit ? 'p-button-warning' : 'p-button-success'" [disabled]="!productForm.valid" type="submit">
+          {{isEdit ? 'Update' : 'Add'}}
+        </button>
+        <button pButton pRipple [rounded]="true" severity="help" (click)="toggleForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <div class="row" *ngIf="products.length > 0 else noProductsTemplate">
+    <div class="col-sm-12">
+      <h1 style="color: rgb(109, 2, 91);">Product information table</h1>
+      <p-table [value]="products" selectionMode="single" [(selection)]="selectedProduct">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="code">
+              Name <p-sortIcon field="code" />
+            </th>
+            <th pSortableColumn="name">
+              Price <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="category">
+              Category <p-sortIcon field="category" />
+            </th>
+            <th pSortableColumn="quantity">
+              Actions <p-sortIcon field="quantity" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.category}}</td>
+            <td>
+              <button pButton pRipple class="me-1" (click)="editProduct(product)">Edit</button>
+              <button pButton pRipple [rounded]="true" severity="danger"
+                (click)="deleteProduct(product.proId)">Delete</button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <ng-template #noProductsTemplate>
+    <div class="row" *ngIf="showForm">
+      <div class="col-sm-12 border text-center">
+        <p style="color:red;">No product information is present.</p>
+      </div>
+    </div>
+  </ng-template>
+</div>
